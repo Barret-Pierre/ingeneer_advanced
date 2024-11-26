@@ -1,0 +1,12 @@
+{
+  "image": {
+      "width": 1920,
+      "height": 1080
+  },
+  "reflections": 2,
+  "ambient": {
+      "r": 1,
+      "g": 1,
+      "b": 1
+  }
+}
