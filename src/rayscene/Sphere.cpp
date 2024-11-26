@@ -37,7 +37,7 @@ bool Sphere::intersects(Ray &r, Intersection &intersection, CullingType culling)
 
   // Is the length of CP greater than the radius of the circle ? If yes, no intersection!
   Vector3 CP = P - center;
-  double distance = CP.length();
+  double distance = CP.lengthSquared();
   if (distance > radius)
   {
     return false;
@@ -45,7 +45,7 @@ bool Sphere::intersects(Ray &r, Intersection &intersection, CullingType culling)
 
   // Calculate the exact point of collision: P1
   double a = sqrt(radius * radius - distance * distance);
-  double t = OP.length() - a;
+  double t = OP.lengthSquared() - a;
   Vector3 P1 = r.GetPosition() + (r.GetDirection() * t);
 
   // Pre-calculate some useful values for rendering
