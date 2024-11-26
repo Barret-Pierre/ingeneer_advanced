@@ -2,7 +2,6 @@
 #include <fstream>
 #include <vector>
 #include <cstdlib>
-#include <openssl/sha.h>
 #include <iomanip>
 #include <sstream>
 #include "../../src/rayscene/SceneLoader.hpp"
@@ -22,14 +21,6 @@ std::vector<unsigned char> readFileBytes(const std::string &filePath)
 size_t generateHash(const std::vector<unsigned char> &imageData)
 {
   return std::hash<std::string>()(std::string(imageData.begin(), imageData.end()));
-}
-
-void compareHashImages(size_t outputImageHash, const std::vector<unsigned char> &outputImageBytes, size_t referenceImageHash, const std::vector<unsigned char> &referenceImageBytes)
-{
-  printf("Reference image hash size: %zu\n", referenceImageBytes.size());
-  printf("Reference image hash: %ld\n", referenceImageHash);
-  printf("Image hash size: %zu\n", outputImageBytes.size());
-  printf("Image hash: %ld\n", outputImageHash);
 }
 
 int main(int argc, char *argv[])
@@ -60,10 +51,7 @@ int main(int argc, char *argv[])
   size_t outputImageHash = generateHash(outputImageBytes);
   size_t referenceImageHash = generateHash(referenceImageBytes);
 
-  // compare hash
-  compareHashImages(outputImageHash, outputImageBytes, referenceImageHash, referenceImageBytes);
-
-  // Comparer les images
+  // Comparer les hash des images
   if (outputImageHash == referenceImageHash)
   {
     std::cout << "Test passed: Images are identical." << std::endl;
