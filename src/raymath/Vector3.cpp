@@ -70,12 +70,13 @@ double Vector3::lengthSquared() const
 
 const Vector3 Vector3::normalize() const
 {
-  double lenSquared = this->lengthSquared();
-  if (lenSquared == 0)
+  double length = this->length();
+  if (length == 0)
   {
     return Vector3();
   }
-  return *this * (1.0 / this->length());
+  const double invLen = 1.0 / length;
+  return *this * invLen;
 }
 
 double Vector3::dot(Vector3 const &vec) const
