@@ -78,7 +78,7 @@ bool Mesh::intersects(Ray &r, Intersection &intersection, CullingType culling)
         if (triangles[i]->intersects(r, tInter, culling))
         {
 
-            tInter.Distance = (tInter.Position - r.GetPosition()).length();
+            tInter.Distance = (tInter.Position - r.GetPosition()).lengthSquared();
             if (closestDistance < 0 || tInter.Distance < closestDistance)
             {
                 closestDistance = tInter.Distance;

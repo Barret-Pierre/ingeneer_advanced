@@ -53,7 +53,7 @@ bool Scene::closestIntersection(Ray &r, Intersection &closest, CullingType culli
     if (objects[i]->intersects(r, intersection, culling))
     {
 
-      intersection.Distance = (intersection.Position - r.GetPosition()).length();
+      intersection.Distance = (intersection.Position - r.GetPosition()).lengthSquared();
       if (closestDistance < 0 || intersection.Distance < closestDistance)
       {
         closestDistance = intersection.Distance;
