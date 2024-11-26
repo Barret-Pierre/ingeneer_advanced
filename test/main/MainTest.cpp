@@ -28,13 +28,13 @@ int main(int argc, char *argv[])
 
   if (argc != 3)
   {
-    std::cerr << "Usage: " << argv[0] << " <scenePath> <referenceImagePath>" << std::endl;
+    std::cerr << "Usage: " << argv[0] << " <scenePath> <referenceImageHash>" << std::endl;
     return 1;
   }
 
   // Chemins des images
   std::string scenePath = argv[1];
-  std::string referenceImagePath = argv[2];
+  size_t referenceImageHash = std::stoul(argv[2]);
   std::string outputImagepath = "/app/test/main/test_output.png";
 
   auto [scene, camera, image] = SceneLoader::Load(scenePath);
@@ -45,27 +45,26 @@ int main(int argc, char *argv[])
 
   // Decode image
   std::vector<unsigned char> outputImageBytes = readFileBytes(outputImagepath);
-  std::vector<unsigned char> referenceImageBytes = readFileBytes(referenceImagePath);
 
   // Generate hash
   size_t outputImageHash = generateHash(outputImageBytes);
-  size_t referenceImageHash = generateHash(referenceImageBytes);
+
+  printf("Output image hash: %zu\n", outputImageHash);
+  printf("Reference image hash: %zu\n", referenceImageHash);
+
+  delete scene;
+  delete camera;
+  delete image;
 
   // Comparer les hash des images
   if (outputImageHash == referenceImageHash)
   {
     std::cout << "Test passed: Images are identical." << std::endl;
-    delete scene;
-    delete camera;
-    delete image;
     return 0;
   }
   else
   {
     std::cerr << "Test failed: Images are different." << std::endl;
-    delete scene;
-    delete camera;
-    delete image;
     return 1;
   }
 }

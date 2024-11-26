@@ -20,46 +20,46 @@ target_include_directories(main_test PUBLIC
 add_test(NAME triangles_on_plane
          COMMAND main_test
          /app/scenes/two-triangles-on-plane.json
-         /app/test/assets/triangles_test.png)
+         8025077358804935305)
 
 # Test Sphere
 add_test(NAME spheres_on_plane
          COMMAND main_test
          /app/scenes/two-spheres-on-plane.json
-         /app/test/assets/spheres_test.png)
+         4691788139138401968)
 
 # Test Sphere mesh
 add_test(NAME sphere_mesh_on_plane
          COMMAND main_test
          /app/scenes/iso-sphere-on-plane.json
-         /app/test/assets/sphere_mesh_test.png)
+         8730072878431680756)
 
 # Test Sphere galaxy
 add_test(NAME sphere_galaxy_on_plane
          COMMAND main_test
          /app/scenes/sphere-galaxy-on-plane.json
-         /app/test/assets/spheres_galaxy_test.png)
+         5650196946722507571)
 
 # Test Monkey
 add_test(NAME monkey_on_plane
          COMMAND main_test
          /app/scenes/monkey-on-plane.json
-         /app/test/assets/monkey_test.png)
+         15669477520277811191)
 
 # Test All
 add_test(NAME all
          COMMAND main_test
          /app/scenes/all.json
-         /app/test/assets/all_test.png)
+         16021457539211696994)
 
 # Test Limite
 add_test(NAME limite
          COMMAND main_test
          /app/scenes/without-light-scene.json
-         /app/test/assets/without_light_test.png)
+         11213600954709486593)
 
-# Test Limite
+# Test Error
 add_test(NAME Error
          COMMAND main_test
          /app/scenes/two-spheres-on-plane.json
-         /app/test/assets/triangles_test.png)
+         4691788139138401968)
