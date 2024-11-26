@@ -43,20 +43,26 @@ void Camera::setPosition(Vector3 &pos)
  */
 void renderSegment(RenderSegment *segment)
 {
+  const double halfHeight = segment->height * 0.5;
+  const double intervalY = segment->intervalY;
+  const double intervalX = segment->intervalX;
+  const int width = segment->image->width;
+  const int reflections = segment->reflections;
 
+  Vector3 origin(0, 0, -1);
+  // Ray ray(origin, origin);
   for (int y = segment->rowMin; y < segment->rowMax; ++y)
   {
-    double yCoord = (segment->height / 2.0) - (y * segment->intervalY);
+    double yCoord = halfHeight - (y * intervalY);
 
-    for (int x = 0; x < segment->image->width; ++x)
+    for (int x = 0; x < width; ++x)
     {
-      double xCoord = -0.5 + (x * segment->intervalX);
+      double xCoord = -0.5 + (x * intervalX);
 
       Vector3 coord(xCoord, yCoord, 0);
-      Vector3 origin(0, 0, -1);
       Ray ray(origin, coord - origin);
 
-      Color pixel = segment->scene->raycast(ray, ray, 0, segment->reflections);
+      Color pixel = segment->scene->raycast(ray, ray, 0, reflections);
       segment->image->setPixel(x, y, pixel);
     }
   }
