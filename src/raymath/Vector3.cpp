@@ -76,7 +76,8 @@ const Vector3 Vector3::normalize() const
   {
     return Vector3();
   }
-  return *this / length;
+  double ratio = 1.0 / length;
+  return *this * ratio;
 }
 
 double Vector3::dot(Vector3 const &vec) const
