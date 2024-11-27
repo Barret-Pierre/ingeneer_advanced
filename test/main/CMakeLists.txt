@@ -1,12 +1,13 @@
 # Ajoutez l'exécutable
 add_executable(main_test MainTest.cpp)
 target_link_libraries(main_test 
-    PUBLIC 
-    rayscene
-    raymath
-    rayimage
-    lodepng
-    )
+                      PUBLIC 
+                      rayscene
+                      raymath
+                      rayimage
+                      lodepng
+                      Threads::Threads
+                      )
 
 set_target_properties(main_test PROPERTIES
     RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/test"

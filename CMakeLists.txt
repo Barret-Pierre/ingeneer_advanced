@@ -1,5 +1,7 @@
 cmake_minimum_required(VERSION 3.5.0)
 project(raytracer VERSION 0.1.0 LANGUAGES C CXX)
+set(THREADS_PREFER_PTHREAD_FLAG ON)
+find_package(Threads REQUIRED)
 
 # Enable testing
 enable_testing()
@@ -30,4 +32,5 @@ target_link_libraries(raytracer
                       raymath
                       rayimage
                       lodepng
+                      Threads::Threads
                       )
