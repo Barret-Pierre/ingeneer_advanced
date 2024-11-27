@@ -17,10 +17,22 @@ void Triangle::applyTransform()
   tA = this->transform.apply(A);
   tB = this->transform.apply(B);
   tC = this->transform.apply(C);
+
+#ifdef ENABLE_BOUNDING_BOX
+  calculateBoundingBox();
+#endif
 }
 
 bool Triangle::intersects(Ray &r, Intersection &intersection, CullingType culling)
 {
+// // Vérifie l'AABB pour exclure l'objet si le rayon ne l'intersecte pas
+#ifdef ENABLE_BOUNDING_BOX
+  if (!boundingBox.intersects(r))
+  {
+    return false;
+  }
+#endif
+
   Vector3 BA = tB - tA;
   Vector3 CA = tC - tA;
   Vector3 normal = BA.cross(CA).normalize();
@@ -81,4 +93,12 @@ bool Triangle::intersects(Ray &r, Intersection &intersection, CullingType cullin
   intersection.Normal = normal;
 
   return true;
+}
+
+void Triangle::calculateBoundingBox()
+{
+  Vector3 minPoint = Vector3(std::min({A.x, B.x, C.x}), std::min({A.y, B.y, C.y}), std::min({A.z, B.z, C.z}));
+  Vector3 maxPoint = Vector3(std::max({A.x, B.x, C.x}), std::max({A.y, B.y, C.y}), std::max({A.z, B.z, C.z}));
+  boundingBox = AABB(minPoint, maxPoint);
+  // std::cout << "Triangle bounding box: " << boundingBox << std::endl;
 }

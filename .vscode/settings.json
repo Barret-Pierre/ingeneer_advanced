@@ -1,5 +1,6 @@
 {
   "files.associations": {
+    "*.module": "php",
     "__bit_reference": "cpp",
     "__hash_table": "cpp",
     "__locale": "cpp",
@@ -72,6 +73,7 @@
     "map": "cpp",
     "valarray": "cpp",
     "__tree": "cpp",
-    "span": "cpp"
+    "span": "cpp",
+    "thread": "cpp"
   }
 }
