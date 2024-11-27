@@ -1,9 +1,22 @@
 cmake_minimum_required(VERSION 3.5.0)
 project(raytracer VERSION 0.1.0 LANGUAGES C CXX)
 
-# Enable testing
+# ----- Multithreading
+set(THREADS_PREFER_PTHREAD_FLAG ON)
+find_package(Threads REQUIRED)
+# Option pour ajouter le mutithreading par défault
+option(ENABLE_MULTITHREADING "Enable multithreading for rendering" ON)
+# Posibité de désactiver le multithreading
+if (ENABLE_MULTITHREADING)
+    add_compile_definitions(ENABLE_MULTITHREADING)
+else()
+    add_compile_definitions(DISABLE_MULTITHREADING)
+endif()
+
+# ----- Test config
 enable_testing()
 
+# ----- Base config
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
@@ -30,4 +43,5 @@ target_link_libraries(raytracer
                       raymath
                       rayimage
                       lodepng
+                      Threads::Threads
                       )
