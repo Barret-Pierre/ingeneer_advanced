@@ -65,20 +65,22 @@ void renderSegment(RenderSegment *segment)
 
 void Camera::render(Image &image, Scene &scene)
 {
-
+#ifdef ENABLE_MULTITHREADING
   unsigned int nthreads = std::thread::hardware_concurrency();
-
   std::vector<std::thread> threads;
+  // Calcul du nombre de lignes par section
+  int rowsPerThread = image.height / nthreads;
+#endif
+
   double ratio = (double)image.width / (double)image.height;
   double height = 1.0 / ratio;
 
   double intervalX = 1.0 / (double)image.width;
   double intervalY = height / (double)image.height;
 
-  // Calcul du nombre de lignes par section
-  int rowsPerThread = image.height / nthreads;
-
   scene.prepare();
+
+#ifdef ENABLE_MULTITHREADING
   // Create a new thread for each segment by calling the function to be executed
   // by the thread, and passing some parameters
   for (int i = 0; i < nthreads; ++i)
@@ -107,6 +109,20 @@ void Camera::render(Image &image, Scene &scene)
   {
     thread.join();
   }
+#else
+  // Rendu séquentiel si le multithreading est désactivé
+  RenderSegment seg;
+  seg.height = height;
+  seg.image = &image;
+  seg.scene = &scene;
+  seg.intervalX = intervalX;
+  seg.intervalY = intervalY;
+  seg.reflections = Reflections;
+  seg.rowMin = 0;
+  seg.rowMax = image.height;
+
+  renderSegment(&seg);
+#endif
 }
 
 std::ostream &operator<<(std::ostream &_stream, Camera &cam)
