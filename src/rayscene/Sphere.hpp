@@ -3,6 +3,7 @@
 #include "../raymath/Vector3.hpp"
 #include "../raymath/Color.hpp"
 #include "../raymath/Ray.hpp"
+#include "../raymath/AABB.hpp"
 
 class Sphere : public SceneObject
 {

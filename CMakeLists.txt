@@ -13,6 +13,16 @@ else()
     add_compile_definitions(DISABLE_MULTITHREADING)
 endif()
 
+# ----- Bounding box
+# Option pour ajouter le boundign box par défault
+option(ENABLE_BOUNDING_BOX "Enable bounding box for rendering" ON)
+# Posibité de désactiver le multithreading
+if (ENABLE_BOUNDING_BOX)
+    add_compile_definitions(ENABLE_BOUNDING_BOX)
+else()
+    add_compile_definitions(DISABLE_BOUNDING_BOX)
+endif()
+
 # ----- Test config
 enable_testing()
 
