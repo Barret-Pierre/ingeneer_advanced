@@ -25,7 +25,7 @@ void Triangle::applyTransform()
 
 bool Triangle::intersects(Ray &r, Intersection &intersection, CullingType culling)
 {
-// // Vérifie l'AABB pour exclure l'objet si le rayon ne l'intersecte pas
+// Vérifie l'AABB pour exclure l'objet si le rayon ne l'intersecte pas
 #ifdef ENABLE_BOUNDING_BOX
   if (!boundingBox.intersects(r))
   {
@@ -97,8 +97,7 @@ bool Triangle::intersects(Ray &r, Intersection &intersection, CullingType cullin
 
 void Triangle::calculateBoundingBox()
 {
-  Vector3 minPoint = Vector3(std::min({A.x, B.x, C.x}), std::min({A.y, B.y, C.y}), std::min({A.z, B.z, C.z}));
-  Vector3 maxPoint = Vector3(std::max({A.x, B.x, C.x}), std::max({A.y, B.y, C.y}), std::max({A.z, B.z, C.z}));
+  Vector3 minPoint = Vector3(std::min({tA.x, tB.x, tC.x}) - COMPARE_ERROR_CONSTANT, std::min({tA.y, tB.y, tC.y}) - COMPARE_ERROR_CONSTANT, std::min({tA.z, tB.z, tC.z}) - COMPARE_ERROR_CONSTANT);
+  Vector3 maxPoint = Vector3(std::max({tA.x, tB.x, tC.x}) + COMPARE_ERROR_CONSTANT, std::max({tA.y, tB.y, tC.y}) + COMPARE_ERROR_CONSTANT, std::max({tA.z, tB.z, tC.z}) + COMPARE_ERROR_CONSTANT);
   boundingBox = AABB(minPoint, maxPoint);
-  // std::cout << "Triangle bounding box: " << boundingBox << std::endl;
 }
