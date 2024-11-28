@@ -55,6 +55,16 @@ bool AABB::intersects(Ray &r)
     return tmax >= tmin && tmax > 0;
 }
 
+Vector3 AABB::getMin() const
+{
+    return Min;
+}
+
+Vector3 AABB::getMax() const
+{
+    return Max;
+}
+
 std::ostream &operator<<(std::ostream &_stream, AABB const &box)
 {
     return _stream << "Min(" << box.Min << ")-Max(" << box.Max << ")";

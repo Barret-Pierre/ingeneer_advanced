@@ -109,6 +109,25 @@ const Vector3 Vector3::inverse() const
   return c;
 }
 
+const double Vector3::getAxis(int axis) const
+{
+  switch (axis)
+  {
+  case 0:
+    return x;
+    break;
+  case 1:
+    return y;
+    break;
+  case 2:
+    return z;
+    break;
+  default:
+    return 0;
+    break;
+  }
+}
+
 std::ostream &operator<<(std::ostream &_stream, Vector3 const &vec)
 {
   return _stream << "(" << vec.x << "," << vec.y << "," << vec.z << ")";

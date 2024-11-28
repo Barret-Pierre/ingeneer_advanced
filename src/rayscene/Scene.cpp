@@ -1,8 +1,6 @@
-#include <iostream>
 #include "Scene.hpp"
-#include "Intersection.hpp"
 
-Scene::Scene()
+Scene::Scene() : tree()
 {
 }
 
@@ -33,8 +31,10 @@ void Scene::prepare()
 {
   for (int i = 0; i < objects.size(); ++i)
   {
+
     objects[i]->applyTransform();
   }
+  tree.build(objects);
 }
 
 std::vector<Light *> Scene::getLights()
@@ -44,25 +44,25 @@ std::vector<Light *> Scene::getLights()
 
 bool Scene::closestIntersection(Ray &r, Intersection &closest, CullingType culling)
 {
-  Intersection intersection;
+  return tree.intersect(r, closest, culling);
+  // Intersection intersection;
+  // double closestDistance = -1;
+  // Intersection closestInter;
+  // for (int i = 0; i < objects.size(); ++i)
+  // {
+  //   if (objects[i]->intersects(r, intersection, culling))
+  //   {
 
-  double closestDistance = -1;
-  Intersection closestInter;
-  for (int i = 0; i < objects.size(); ++i)
-  {
-    if (objects[i]->intersects(r, intersection, culling))
-    {
-
-      intersection.Distance = (intersection.Position - r.GetPosition()).lengthSquared();
-      if (closestDistance < 0 || intersection.Distance < closestDistance)
-      {
-        closestDistance = intersection.Distance;
-        closestInter = intersection;
-      }
-    }
-  }
-  closest = closestInter;
-  return (closestDistance > -1);
+  //     intersection.Distance = (intersection.Position - r.GetPosition()).lengthSquared();
+  //     if (closestDistance < 0 || intersection.Distance < closestDistance)
+  //     {
+  //       closestDistance = intersection.Distance;
+  //       closestInter = intersection;
+  //     }
+  //   }
+  // }
+  // closest = closestInter;
+  // return (closestDistance > -1);
 }
 
 Color Scene::raycast(Ray &r, Ray &camera, int castCount, int maxCastCount)

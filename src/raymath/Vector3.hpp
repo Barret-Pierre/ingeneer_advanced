@@ -30,6 +30,7 @@ public:
   const Vector3 reflect(Vector3 const &normal) const;
   const Vector3 cross(Vector3 const &vec) const;
   const Vector3 inverse() const;
+  const double getAxis(int) const;
 
   friend std::ostream &operator<<(std::ostream &_stream, Vector3 const &vec);
 };
