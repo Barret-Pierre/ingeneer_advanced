@@ -35,6 +35,7 @@ void Scene::prepare()
     objects[i]->applyTransform();
   }
   tree.build(objects);
+  tree.printTree();
 }
 
 std::vector<Light *> Scene::getLights()

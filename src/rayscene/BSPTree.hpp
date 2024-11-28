@@ -10,12 +10,14 @@
 class BSPTree
 {
 public:
-  std::unique_ptr<BSPNode> root;
+  BSPNode *root;
 
   BSPTree();
 
   void build(const std::vector<SceneObject *> &objects, int depth = 0);
   bool intersect(Ray &ray, Intersection &closest, CullingType culling);
-  BSPNode buildRecursive(const std::vector<SceneObject *> &objects, int depth = 0);
-  bool intersectRecursive(Ray &ray, Intersection &closest, const std::unique_ptr<BSPNode> &node, CullingType culling);
+  void buildRecursive(BSPNode *node, int depth = 0);
+  bool intersectRecursive(Ray &ray, Intersection &closest, BSPNode *node, CullingType culling, int depth = 0);
+  void printNode(BSPNode *node, int depth) const;
+  void printTree() const;
 };

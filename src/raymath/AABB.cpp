@@ -69,3 +69,46 @@ std::ostream &operator<<(std::ostream &_stream, AABB const &box)
 {
     return _stream << "Min(" << box.Min << ")-Max(" << box.Max << ")";
 }
+
+// split divise la boite englobante en deux boites englobantes et retroune les deux boites
+std::pair<AABB, AABB> AABB::split(int axis) const
+{
+    Vector3 mid = (Min + Max) * 0.5f; // Calculate the midpoint
+
+    AABB first = *this;
+    AABB second = *this;
+
+    switch (axis)
+    {
+    case 0:
+        first.Max.x = mid.x;
+        second.Min.x = mid.x;
+        break;
+    case 1:
+        first.Max.y = mid.y;
+        second.Min.y = mid.y;
+        break;
+    case 2:
+        first.Max.z = mid.z;
+        second.Min.z = mid.z;
+        break;
+    }
+
+    return {first, second};
+}
+
+// overlaps verifie qu'une autre boite englobante chevauche cette boite englobante
+bool AABB::overlaps(AABB const &other)
+{
+    // bool retur = (this->Max.x >= other.Min.x && this->Min.x <= other.Max.x) &&
+    //              (this->Max.y >= other.Min.y && this->Min.y <= other.Max.y) &&
+    //              (this->Max.z >= other.Min.z && this->Min.z <= other.Max.z);
+    // std::cout << "AABB::overlaps : " << retur << std::endl;
+    // std::cout << "AABB::overlaps MAX : " << Max << std::endl;
+    // std::cout << "AABB::overlaps Min : " << Max << std::endl;
+    // std::cout << "AABB::overlaps Other Max : " << other.Max << std::endl;
+    // std::cout << "AABB::overlaps Other Min : " << other.Min << std::endl;
+    return (this->Max.x >= other.Min.x && this->Min.x <= other.Max.x) &&
+           (this->Max.y >= other.Min.y && this->Min.y <= other.Max.y) &&
+           (this->Max.z >= other.Min.z && this->Min.z <= other.Max.z);
+}
