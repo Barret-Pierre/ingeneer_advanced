@@ -12,7 +12,6 @@ class Mesh : public SceneObject
 {
 private:
   std::vector<Triangle *> triangles;
-  AABB boundingBox;
 
 public:
   Mesh();
@@ -22,5 +21,5 @@ public:
 
   virtual void applyTransform() override;
   virtual bool intersects(Ray &r, Intersection &intersection, CullingType culling) override;
-  void calculateBoundingBox(); // Méthode pour calculer l'AABB de la sphère
+  void calculateBoundingBox() override;
 };

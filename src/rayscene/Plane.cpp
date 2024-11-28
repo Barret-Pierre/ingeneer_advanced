@@ -11,8 +11,22 @@ Plane::~Plane()
 {
 }
 
+void Plane::applyTransform()
+{
+#ifdef ENABLE_BOUNDING_BOX
+  calculateBoundingBox();
+#endif
+}
+
 bool Plane::intersects(Ray &r, Intersection &intersection, CullingType culling)
 {
+  // Vérifie l'AABB pour exclure l'objet si le rayon ne l'intersecte pas
+#ifdef ENABLE_BOUNDING_BOX
+  if (!boundingBox.intersects(r))
+  {
+    return false;
+  }
+#endif
 
   float denom = r.GetDirection().dot(normal);
 
@@ -31,4 +45,11 @@ bool Plane::intersects(Ray &r, Intersection &intersection, CullingType culling)
   intersection.Mat = this->material;
 
   return true;
+}
+
+void Plane::calculateBoundingBox()
+{
+  Vector3 min = Vector3(-INFINITY, -INFINITY, -INFINITY);
+  Vector3 max = Vector3(INFINITY, INFINITY, INFINITY);
+  boundingBox = AABB(min, max);
 }

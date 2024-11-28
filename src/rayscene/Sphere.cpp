@@ -15,10 +15,21 @@ void Sphere::applyTransform()
 {
   Vector3 c;
   this->center = this->transform.apply(c);
+#ifdef ENABLE_BOUNDING_BOX
+  calculateBoundingBox();
+#endif
 }
 
 bool Sphere::intersects(Ray &r, Intersection &intersection, CullingType culling)
 {
+
+  // Vérifie l'AABB pour exclure l'objet si le rayon ne l'intersecte pas
+#ifdef ENABLE_BOUNDING_BOX
+  if (!boundingBox.intersects(r))
+  {
+    return false;
+  }
+#endif
   // Pré-calculer les informations du rayon
   const Vector3 &rayOrigin = r.GetPosition();
   const Vector3 &rayDirection = r.GetDirection();
@@ -61,4 +72,11 @@ bool Sphere::intersects(Ray &r, Intersection &intersection, CullingType culling)
   intersection.Normal = (P1 - center).normalize();
 
   return true;
+}
+
+void Sphere::calculateBoundingBox()
+{
+  Vector3 min = center - Vector3(radius, radius, radius);
+  Vector3 max = center + Vector3(radius, radius, radius);
+  boundingBox = AABB(min, max);
 }

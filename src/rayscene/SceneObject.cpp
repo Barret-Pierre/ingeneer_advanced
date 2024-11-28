@@ -18,3 +18,12 @@ bool SceneObject::intersects(Ray &r, Intersection &intersection, CullingType cul
 void SceneObject::applyTransform()
 {
 }
+
+void SceneObject::calculateBoundingBox()
+{
+}
+
+AABB SceneObject::getBoundingBox()
+{
+  return boundingBox;
+}
