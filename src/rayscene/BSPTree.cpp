@@ -28,23 +28,20 @@ void BSPTree::buildRecursive(BSPNode *node, int depth)
   }
   // std::cout << "BuildRecursive =>  Depth: " << depth << " => boundingBox Min" << node->boundingBox.getMin() << " - boundingBox Max" << node->boundingBox.getMax() << std::endl;
 
-  // Condition de feuille en cas de profondeur maximale ou d'un petit nombre d'objets 10 / 20
+  // Condition de feuille en cas de profondeur maximale ou d'un petit nombre d'objets 10 / 13
   //? Why are we returning the node here?
-  if (node->objects.size() <= 10 || depth >= 13)
+  if (node->objects.size() <= 2 || depth >= 4)
   {
     return;
   }
 
   // Diviser les objets selon un plan
-  int axis = depth % 3; // Axe de division : 0=x, 1=y, 2=z
-  // double splitValue = (globalBox.getMin().getAxis(axis) + globalBox.getMax().getAxis(axis)) * 0.5;
-
-  int axis = 0; // 0 = x, 1 = y, 2 = z
+  int axis = 0; // 0 = x, 1 = y, 2 = z axe dominant x par défaut
   Vector3 boxSize = node->boundingBox.getMax() - node->boundingBox.getMin();
   if (boxSize.y > boxSize.x && boxSize.y > boxSize.z)
     axis = 1; // y est dominant
   else if (boxSize.z > boxSize.x)
-    axis = 2;
+    axis = 2; // z est dominant
 
   // Diviser la global box en deux => AABB * 2
   auto [left, right] = node->boundingBox.split(axis);
@@ -177,10 +174,12 @@ bool BSPTree::intersectRecursive(Ray &ray, Intersection &closest, BSPNode *node,
   // }
   // return hit;
   if (!node || !node->boundingBox.intersects(ray))
-    return false;
+    std::cout << "IntersectRecursive NULL OR NO INTERSECT => Depth: " << depth << " Node id: " << node->id << std::endl;
+  return false;
 
   if (node->isLeaf())
   {
+    std::cout << "IntersectRecursive IS LEAF => Depth: " << depth << " Node id: " << node->id << std::endl;
     bool hit = false;
     for (SceneObject *object : node->objects)
     {
@@ -197,21 +196,27 @@ bool BSPTree::intersectRecursive(Ray &ray, Intersection &closest, BSPNode *node,
     }
     return hit;
   }
+
+  std::cout << "IntersectRecursive NOT LEAF => Depth: " << depth << " Node id: " << node->id << std::endl;
   bool hitLeft = false, hitRight = false;
   Intersection leftClosest, rightClosest;
 
   if (node->leftChild && node->leftChild->boundingBox.intersects(ray) && node->leftChild->objects.size() > 0)
   {
+    std::cout << "IntersectRecursive LEFT => Depth: " << depth << " Node id: " << node->id << std::endl;
     hitLeft = intersectRecursive(ray, leftClosest, node->leftChild, culling, depth + 1);
   }
 
-  if (node->rightChild && node->rightChild->boundingBox.intersects(ray) && node->leftChild->objects.size() > 0)
+  if (node->rightChild && node->rightChild->boundingBox.intersects(ray) && node->rightChild->objects.size() > 0)
   {
+    std::cout << "IntersectRecursive RIGHT => Depth: " << depth << " Node id: " << node->id << std::endl;
     hitRight = intersectRecursive(ray, rightClosest, node->rightChild, culling, depth + 1);
   }
 
   if (hitLeft && hitRight)
   {
+    std::cout << "HIT LEFT AND RIGHT => Depth: " << depth << " Node id: " << node->id << std::endl;
+
     if ((leftClosest.Position - ray.GetPosition()).lengthSquared() <
         (rightClosest.Position - ray.GetPosition()).lengthSquared())
     {
@@ -225,11 +230,13 @@ bool BSPTree::intersectRecursive(Ray &ray, Intersection &closest, BSPNode *node,
   }
   else if (hitLeft)
   {
+    std::cout << "HIT LEFT => Depth: " << depth << " Node id: " << node->id << std::endl;
     closest = leftClosest;
     return true;
   }
   else if (hitRight)
   {
+    std::cout << "HIT  RIGHT => Depth: " << depth << " Node id: " << node->id << std::endl;
     closest = rightClosest;
     return true;
   }
@@ -256,4 +263,38 @@ void BSPTree::printNode(BSPNode *node, int depth) const
 
   printNode(node->leftChild, depth + 1);
   printNode(node->rightChild, depth + 1);
+}
+
+void BSPTree::exportToDot(const std::string &filename) const
+{
+  std::ofstream dotFile(filename);
+  dotFile << "digraph BSPTree {" << std::endl;
+  exportNodeToDot(root, dotFile);
+  dotFile << "}" << std::endl;
+}
+
+void BSPTree::exportNodeToDot(BSPNode *node, std::ofstream &dotFile) const
+{
+  if (!node)
+    return;
+
+  // Ajouter le nœud courant
+  dotFile << "  \"" << node << "\" [label=\"";
+  dotFile << "Id: " << node->id << "\\n";
+  dotFile << "Objects: " << node->objects.size() << "\\n";
+  dotFile << "BBox Min: " << node->boundingBox.getMin() << "\\n";
+  dotFile << "BBox Max: " << node->boundingBox.getMax();
+  dotFile << "\"];" << std::endl;
+
+  // Relier aux enfants
+  if (node->leftChild)
+  {
+    dotFile << "  \"" << node << "\" -> \"" << node->leftChild << "\";" << std::endl;
+    exportNodeToDot(node->leftChild, dotFile);
+  }
+  if (node->rightChild)
+  {
+    dotFile << "  \"" << node << "\" -> \"" << node->rightChild << "\";" << std::endl;
+    exportNodeToDot(node->rightChild, dotFile);
+  }
 }
