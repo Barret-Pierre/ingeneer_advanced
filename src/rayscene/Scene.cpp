@@ -34,9 +34,9 @@ void Scene::prepare()
 
     objects[i]->applyTransform();
   }
-  tree.build(objects);
+  tree->build(objects);
   // tree.printTree();
-  tree.exportToDot("/app/build/tree.dot");
+  tree->exportToDot("/app/build/tree.dot");
 }
 
 std::vector<Light *> Scene::getLights()
@@ -47,25 +47,28 @@ std::vector<Light *> Scene::getLights()
 bool Scene::closestIntersection(Ray &r, Intersection &closest, CullingType culling)
 {
   // std::cout << "Scene::closestIntersection => " << std::endl;
-  return tree.intersect(r, closest, culling);
-  // Intersection intersection;
-  // double closestDistance = -1;
-  // Intersection closestInter;
-  // for (int i = 0; i < objects.size(); ++i)
-  // {
-  //   if (objects[i]->intersects(r, intersection, culling))
-  //   {
+  std::vector<SceneObject *> intersectedObjects;
+  tree->intersect(r, closest, culling);
+  intersectedObjects = tree->getIntersectedObjects();
 
-  //     intersection.Distance = (intersection.Position - r.GetPosition()).lengthSquared();
-  //     if (closestDistance < 0 || intersection.Distance < closestDistance)
-  //     {
-  //       closestDistance = intersection.Distance;
-  //       closestInter = intersection;
-  //     }
-  //   }
-  // }
-  // closest = closestInter;
-  // return (closestDistance > -1);
+  Intersection intersection;
+  double closestDistance = -1;
+  Intersection closestInter;
+  for (int i = 0; i < intersectedObjects.size(); ++i)
+  {
+    if (intersectedObjects[i]->intersects(r, intersection, culling))
+    {
+
+      intersection.Distance = (intersection.Position - r.GetPosition()).lengthSquared();
+      if (closestDistance < 0 || intersection.Distance < closestDistance)
+      {
+        closestDistance = intersection.Distance;
+        closestInter = intersection;
+      }
+    }
+  }
+  closest = closestInter;
+  return (closestDistance > -1);
 }
 
 Color Scene::raycast(Ray &r, Ray &camera, int castCount, int maxCastCount)

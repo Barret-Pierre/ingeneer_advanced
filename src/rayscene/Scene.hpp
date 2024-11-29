@@ -15,7 +15,7 @@ class Scene
 private:
   std::vector<SceneObject *> objects;
   std::vector<Light *> lights;
-  BSPTree tree;
+  BSPTree *tree;
 
 public:
   Scene();

@@ -93,12 +93,12 @@ void BSPTree::buildRecursive(BSPNode *node, int depth)
   buildRecursive(node->rightChild, depth + 1);
 }
 
-bool BSPTree::intersect(Ray &ray, Intersection &closest, CullingType culling)
+void BSPTree::intersect(Ray &ray, Intersection &closest, CullingType culling)
 {
   return intersectRecursive(ray, closest, root, culling, 0);
 }
 
-bool BSPTree::intersectRecursive(Ray &ray, Intersection &closest, BSPNode *node, CullingType culling, int depth)
+void BSPTree::intersectRecursive(Ray &ray, Intersection &closest, BSPNode *node, CullingType culling, int depth)
 {
   // std::cout << "IntersectRecursive => ------------ Depth: " << depth << std::endl;
   // if (!node || !node->boundingBox.intersects(ray))
@@ -177,64 +177,31 @@ bool BSPTree::intersectRecursive(Ray &ray, Intersection &closest, BSPNode *node,
   // }
   // return hit;
   if (!node || !node->boundingBox.intersects(ray))
-    return false;
+    return;
 
   if (node->isLeaf())
   {
-    bool hit = false;
     for (SceneObject *object : node->objects)
     {
-      Intersection tempClosest;
-      if (object->intersects(ray, tempClosest, culling))
-      {
-        double distance = (tempClosest.Position - ray.GetPosition()).lengthSquared();
-        if (!hit || distance < closest.Distance)
-        {
-          hit = true;
-          closest = tempClosest;
-        }
-      }
+      intersectedObjects.push_back(object);
     }
-    return hit;
+    return;
   }
+
   bool hitLeft = false, hitRight = false;
   Intersection leftClosest, rightClosest;
 
   if (node->leftChild && node->leftChild->boundingBox.intersects(ray) && node->leftChild->objects.size() > 0)
   {
-    hitLeft = intersectRecursive(ray, leftClosest, node->leftChild, culling, depth + 1);
+    intersectRecursive(ray, leftClosest, node->leftChild, culling, depth + 1);
   }
 
   if (node->rightChild && node->rightChild->boundingBox.intersects(ray) && node->rightChild->objects.size() > 0)
   {
-    hitRight = intersectRecursive(ray, rightClosest, node->rightChild, culling, depth + 1);
+    intersectRecursive(ray, rightClosest, node->rightChild, culling, depth + 1);
   }
 
-  if (hitLeft && hitRight)
-  {
-    if ((leftClosest.Position - ray.GetPosition()).lengthSquared() <
-        (rightClosest.Position - ray.GetPosition()).lengthSquared())
-    {
-      closest = leftClosest;
-    }
-    else
-    {
-      closest = rightClosest;
-    }
-    return true;
-  }
-  else if (hitLeft)
-  {
-    closest = leftClosest;
-    return true;
-  }
-  else if (hitRight)
-  {
-    closest = rightClosest;
-    return true;
-  }
-
-  return false;
+  return;
 }
 
 void BSPTree::printTree() const
@@ -290,4 +257,9 @@ void BSPTree::exportNodeToDot(BSPNode *node, std::ofstream &dotFile) const
     dotFile << "  \"" << node << "\" -> \"" << node->rightChild << "\";" << std::endl;
     exportNodeToDot(node->rightChild, dotFile);
   }
+}
+
+std::vector<SceneObject *> BSPTree::getIntersectedObjects()
+{
+  return intersectedObjects;
 }
