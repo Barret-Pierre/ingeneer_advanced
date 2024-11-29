@@ -35,7 +35,8 @@ void Scene::prepare()
     objects[i]->applyTransform();
   }
   tree.build(objects);
-  tree.printTree();
+  // tree.printTree();
+  tree.exportToDot("/app/build/tree.dot");
 }
 
 std::vector<Light *> Scene::getLights()

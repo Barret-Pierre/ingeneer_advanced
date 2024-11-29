@@ -257,3 +257,37 @@ void BSPTree::printNode(BSPNode *node, int depth) const
   printNode(node->leftChild, depth + 1);
   printNode(node->rightChild, depth + 1);
 }
+
+void BSPTree::exportToDot(const std::string &filename) const
+{
+  std::ofstream dotFile(filename);
+  dotFile << "digraph BSPTree {" << std::endl;
+  exportNodeToDot(root, dotFile);
+  dotFile << "}" << std::endl;
+}
+
+void BSPTree::exportNodeToDot(BSPNode *node, std::ofstream &dotFile) const
+{
+  if (!node)
+    return;
+
+  // Ajouter le nœud courant
+  dotFile << "  \"" << node << "\" [label=\"";
+  dotFile << "Id: " << node->id << "\\n";
+  dotFile << "Objects: " << node->objects.size() << "\\n";
+  dotFile << "BBox Min: " << node->boundingBox.getMin() << "\\n";
+  dotFile << "BBox Max: " << node->boundingBox.getMax();
+  dotFile << "\"];" << std::endl;
+
+  // Relier aux enfants
+  if (node->leftChild)
+  {
+    dotFile << "  \"" << node << "\" -> \"" << node->leftChild << "\";" << std::endl;
+    exportNodeToDot(node->leftChild, dotFile);
+  }
+  if (node->rightChild)
+  {
+    dotFile << "  \"" << node << "\" -> \"" << node->rightChild << "\";" << std::endl;
+    exportNodeToDot(node->rightChild, dotFile);
+  }
+}
