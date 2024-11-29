@@ -81,16 +81,16 @@ std::pair<AABB, AABB> AABB::split(int axis) const
     switch (axis)
     {
     case 0:
-        first.Max.x = mid.x;
-        second.Min.x = mid.x;
+        first.Max.x = mid.x + COMPARE_ERROR_CONSTANT;
+        second.Min.x = mid.x - COMPARE_ERROR_CONSTANT;
         break;
     case 1:
-        first.Max.y = mid.y;
-        second.Min.y = mid.y;
+        first.Max.y = mid.y + COMPARE_ERROR_CONSTANT;
+        second.Min.y = mid.y - COMPARE_ERROR_CONSTANT;
         break;
     case 2:
-        first.Max.z = mid.z;
-        second.Min.z = mid.z;
+        first.Max.z = mid.z + COMPARE_ERROR_CONSTANT;
+        second.Min.z = mid.z - COMPARE_ERROR_CONSTANT;
         break;
     }
 

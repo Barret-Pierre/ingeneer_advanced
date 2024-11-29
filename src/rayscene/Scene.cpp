@@ -45,6 +45,7 @@ std::vector<Light *> Scene::getLights()
 
 bool Scene::closestIntersection(Ray &r, Intersection &closest, CullingType culling)
 {
+  // std::cout << "Scene::closestIntersection => " << std::endl;
   return tree.intersect(r, closest, culling);
   // Intersection intersection;
   // double closestDistance = -1;
@@ -69,6 +70,7 @@ bool Scene::closestIntersection(Ray &r, Intersection &closest, CullingType culli
 Color Scene::raycast(Ray &r, Ray &camera, int castCount, int maxCastCount)
 {
 
+  // std::cout << "------------- Ray cast -----------=> " << std::endl;
   Color pixel;
 
   Intersection intersection;
