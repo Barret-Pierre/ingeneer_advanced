@@ -44,7 +44,9 @@ void Camera::setPosition(Vector3 &pos)
  */
 void renderSegment(RenderSegment *segment)
 {
-
+  // Ray camera(Vector3(0, 0, -1), Vector3(0, 0, 1)); // Exemple de caméra à l'origine
+  // Ray testRay(Vector3(0, 0, -1), Vector3(30, 5, 100));
+  // segment->scene->raycast(testRay, camera, 0, 0);
   for (int y = segment->rowMin; y < segment->rowMax; ++y)
   {
     double yCoord = (segment->height / 2.0) - (y * segment->intervalY);

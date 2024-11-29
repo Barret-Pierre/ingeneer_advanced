@@ -34,9 +34,9 @@ void Scene::prepare()
 
     objects[i]->applyTransform();
   }
-  tree->build(objects);
-  // tree.printTree();
-  tree->exportToDot("/app/build/tree.dot");
+  tree.build(objects);
+  tree.printTree();
+  tree.exportToDot("/app/build/tree.dot");
 }
 
 std::vector<Light *> Scene::getLights()
@@ -46,17 +46,17 @@ std::vector<Light *> Scene::getLights()
 
 bool Scene::closestIntersection(Ray &r, Intersection &closest, CullingType culling)
 {
-  // std::cout << "Scene::closestIntersection => " << std::endl;
-  std::vector<SceneObject *> intersectedObjects;
-  tree->intersect(r, closest, culling);
-  intersectedObjects = tree->getIntersectedObjects();
+  // std::cout << " Intersect " << std::endl;
+  std::set<SceneObject *> intersectedObjects = tree.intersect(r, closest, culling);
+
+  std::cout << " After Intersect " << intersectedObjects.size() << std::endl;
 
   Intersection intersection;
   double closestDistance = -1;
   Intersection closestInter;
-  for (int i = 0; i < intersectedObjects.size(); ++i)
+  for (auto intesectedObject = intersectedObjects.begin(); intesectedObject != intersectedObjects.end(); ++intesectedObject)
   {
-    if (intersectedObjects[i]->intersects(r, intersection, culling))
+    if ((*intesectedObject)->intersects(r, intersection, culling))
     {
 
       intersection.Distance = (intersection.Position - r.GetPosition()).lengthSquared();
@@ -68,6 +68,7 @@ bool Scene::closestIntersection(Ray &r, Intersection &closest, CullingType culli
     }
   }
   closest = closestInter;
+  // std::cout << " Closest intersect end " << std::endl;
   return (closestDistance > -1);
 }
 

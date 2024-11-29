@@ -49,8 +49,9 @@ bool Plane::intersects(Ray &r, Intersection &intersection, CullingType culling)
 
 void Plane::calculateBoundingBox()
 {
+  std::cout << "Calculating bounding box for Plane" << std::endl;
   float extent = 1e1f; // Une très grande valeur pour approximer l'infini
-  Vector3 min = Vector3(-extent, -1, -extent);
-  Vector3 max = Vector3(extent, 0, extent);
+  Vector3 min = Vector3(-extent, point.y - COMPARE_ERROR_CONSTANT, -0.90);
+  Vector3 max = Vector3(extent, point.y + COMPARE_ERROR_CONSTANT, extent);
   boundingBox = AABB(min, max);
 }
