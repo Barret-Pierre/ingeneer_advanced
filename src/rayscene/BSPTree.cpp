@@ -28,15 +28,15 @@ void BSPTree::buildRecursive(BSPNode *node, int depth)
   }
   // std::cout << "BuildRecursive =>  Depth: " << depth << " => boundingBox Min" << node->boundingBox.getMin() << " - boundingBox Max" << node->boundingBox.getMax() << std::endl;
 
-  // Condition de feuille en cas de profondeur maximale ou d'un petit nombre d'objets 10 / 20
+  // Condition de feuille en cas de profondeur maximale ou d'un petit nombre d'objets 10 / 13
   //? Why are we returning the node here?
-  if (node->objects.size() <= 10 || depth >= 13)
+  if (node->objects.size() <= 3 || depth >= 4)
   {
     return;
   }
 
   // Diviser les objets selon un plan
-  int axis = depth % 3; // Axe de division : 0=x, 1=y, 2=z
+  // int axis = depth % 3; // Axe de division : 0=x, 1=y, 2=z
   // double splitValue = (globalBox.getMin().getAxis(axis) + globalBox.getMax().getAxis(axis)) * 0.5;
 
   int axis = 0; // 0 = x, 1 = y, 2 = z
@@ -205,7 +205,7 @@ bool BSPTree::intersectRecursive(Ray &ray, Intersection &closest, BSPNode *node,
     hitLeft = intersectRecursive(ray, leftClosest, node->leftChild, culling, depth + 1);
   }
 
-  if (node->rightChild && node->rightChild->boundingBox.intersects(ray) && node->leftChild->objects.size() > 0)
+  if (node->rightChild && node->rightChild->boundingBox.intersects(ray) && node->rightChild->objects.size() > 0)
   {
     hitRight = intersectRecursive(ray, rightClosest, node->rightChild, culling, depth + 1);
   }
